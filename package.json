@@ -6,6 +6,7 @@
   "scripts": {
     "test": "tape test/test-*.js",
     "coverage": "nyc tape test/test-*.js",
+    "coverage-ci": "nyc --reporter=lcov tape test/test-*.js",
     "linter": "eslint lib bin test"
   },
   "repository": {

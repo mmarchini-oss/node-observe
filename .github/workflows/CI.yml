@@ -1,0 +1,54 @@
+name: on push or pull_request
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        node:
+          - version: 10.x
+          - version: 12.x
+          - version: 13.x
+          - version: 14.x
+            mirror: https://nodejs.org/download/nightly
+          - version: 14.x
+            mirror: https://nodejs.org/download/v8-canary
+        # TODO(mmarchini): fix tests on windows and re-enable it here
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node.version }} ${{ matrix.node.mirror }}
+        uses: mmarchini/setup-node@mirror
+        with:
+          node-version: ${{ matrix.node.version }}
+          node-mirror: ${{ matrix.node.mirror }}
+      - name: npm install
+        run: |
+          npm install
+      - name: run tests
+        run: npm run coverage-ci
+      - uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
+  linter:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run linter
