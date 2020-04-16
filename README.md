@@ -1,8 +1,8 @@
 # Observe 🕵‍♀
 
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/mmarchini/node-observe/CI/master?style=flat-square)
-![Codecov branch](https://img.shields.io/codecov/c/github/mmarchini/node-observe/master?style=flat-square)
-![npm](https://img.shields.io/npm/v/@mmarchini/observe?style=flat-square)
+[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/mmarchini/node-observe/CI/master?style=flat-square)](https://github.com/mmarchini/node-observe/actions?query=branch%3Amaster)
+[![Codecov branch](https://img.shields.io/codecov/c/github/mmarchini/node-observe/master?style=flat-square)](https://codecov.io/mmarchini/node-observe)
+[![npm](https://img.shields.io/npm/v/@mmarchini/observe?style=flat-square)](https://www.npmjs.com/package/@mmarchini/observe)
 
 CLI tool to run common Inspector Protocol tasks on remote Node.js processes.
 
