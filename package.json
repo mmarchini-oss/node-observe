@@ -9,6 +9,7 @@
     "coverage-ci": "nyc --reporter=lcov tape test/test-*.js",
     "linter": "eslint lib bin test"
   },
+  "bin": "./bin/observe.js",
   "repository": {
     "type": "git",
     "url": "git@github.com/mmarchini/node-observe"
