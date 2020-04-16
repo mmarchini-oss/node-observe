@@ -26,14 +26,17 @@ $ npm install @mmarchini/observe
 Or, use npx to get insights with a single command:
 
 ```console
-$ npx @mmarchini/observe ...
+$ npx -q @mmarchini/observe ...
 ```
+
+> Note: since the result of `observe` is redirected to stdout, it's recommended
+> to pass `-q` to `npx` to prevent unwanted lines in the output.
 
 ## Usage
 
-To execute a command, run `npx @mmarchini/observe [command] [options]`. For a
-full list of commands and options, run `npx @mmarchini/observe -h`. Available
-commands are:
+To execute a command, run `npx -q @mmarchini/observe [command] [options]`. For
+a full list of commands and options, run `npx -q @mmarchini/observe -h`.
+Available commands are:
 
   * `heap-profile` will take a Heap Profile
   * `heap-snapshot` will take a Heap Snapshot
@@ -49,5 +52,5 @@ process `<pid>` by sending a `SIGUSR2` signal to the process.
 
 Each command might also have their own options. For example, `heap-profile`
 accepts a `-d <duration>` option to determine for how long the profiler should
-run. `npx @mmarchini/observe command -h` will show all available options for
+run. `npx -q @mmarchini/observe command -h` will show all available options for
 the command.
