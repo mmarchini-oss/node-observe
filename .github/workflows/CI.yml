@@ -1,4 +1,4 @@
-name: on push or pull_request
+name: CI
 
 on:
   push:
