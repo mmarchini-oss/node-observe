@@ -2,6 +2,10 @@
 
 const EventEmitter = require('events');
 const { fork } = require('child_process');
+const { tmpdir } = require('os');
+const { readFile, unlink } = require('fs');
+const { promisify } = require('util');
+const path = require('path');
 const net = require('net');
 
 async function getPort(nextPort = 45032) {
@@ -37,7 +41,25 @@ function startFixtureProcess(t, withInspector = false, port = '0') {
   return fixture;
 }
 
-async function runObserveExecutable(command, { port, pid, options }) {
+let temporaryFileCounter = 0;
+
+function getTemporaryFile() {
+  const hrtime = process.hrtime().join('');
+  const random = Math.floor(Math.random() * Math.floor(Number.MAX_SAFE_INTEGER / 2));
+  return path.join(tmpdir(), `${hrtime}-${temporaryFileCounter++}-${random}`);
+}
+
+function cleanupTemporaryFile(file) {
+  unlink(file, (err) => {
+    if (err) {
+      console.error("Error while cleaning up temporary file:");
+      console.error(err);
+      return;
+    }
+  });
+}
+
+async function runObserveExecutable(command, { port, pid, toFile, options }) {
   let args = [command]
   if (pid)
     args = args.concat(['-p', pid]);
@@ -45,13 +67,22 @@ async function runObserveExecutable(command, { port, pid, options }) {
     args = args.concat(['-P', port]);
   if (options)
     args = args.concat(options);
+  let file;
+  if (toFile) {
+    file = getTemporaryFile();
+    args = args.concat(['-f', file]);
+  }
   const child = fork('./bin/observe.js', args, { encoding: 'utf8', stdio: 'pipe' });
   let output = "";
   child.stdout.on('data', (chunk) => output = output + chunk);
   return new Promise((resolve, reject) => {
-    child.on('exit', (code, signal) => {
+    child.on('exit', async (code, signal) => {
       if (code !== 0 || signal) {
         return reject(new Error(`Process exited with code ${code || signal}`));
+      }
+      if (toFile) {
+        output = await promisify(readFile)(file);
+        cleanupTemporaryFile(file);
       }
       if (!output) {
         return reject(new Error(`Empty output`));

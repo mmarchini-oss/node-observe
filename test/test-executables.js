@@ -18,11 +18,41 @@ test('observe heap-profile', async (t) => {
   });
 });
 
+test('observe heap-profile to file', async (t) => {
+  const port = await getPort();
+  const f = startFixtureProcess(t, false, port);
+  f.on('ready', async () => {
+    const options = { pid: f.pid, port, toFile: true, options: ['-d', 1]};
+    const { head } = await runObserveExecutable('heap-profile', options);
+    t.notEqual(head, undefined);
+    const { callFrame } = head;
+    t.notEqual(callFrame, undefined);
+    f.send('exit');
+    t.end();
+  });
+});
+
 test('observe heap-snapshot', async (t) => {
   const port = await getPort();
   const f = startFixtureProcess(t, false, port);
   f.on('ready', async () => {
     const options = { pid: f.pid, port };
+    const { snapshot, nodes, edges, strings } =
+        await runObserveExecutable('heap-snapshot', options);
+    t.notEqual(snapshot, undefined);
+    t.notEqual(nodes, undefined);
+    t.notEqual(edges, undefined);
+    t.notEqual(strings, undefined);
+    f.send('exit');
+    t.end();
+  });
+});
+
+test('observe heap-snapshot to file', async (t) => {
+  const port = await getPort();
+  const f = startFixtureProcess(t, false, port);
+  f.on('ready', async () => {
+    const options = { pid: f.pid, toFile: true, port };
     const { snapshot, nodes, edges, strings } =
         await runObserveExecutable('heap-snapshot', options);
     t.notEqual(snapshot, undefined);

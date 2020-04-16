@@ -1,5 +1,7 @@
 'use strict';
 
+const { createWriteStream } = require('fs');
+
 const { program } = require('commander');
 
 const ObserveError = require('../lib/internal/error');
@@ -23,13 +25,21 @@ function getHostPortFromArgs({ pid, host, port }) {
   return { host: host || 'localhost', port: port || 9229 };
 }
 
+function getStreamFromArgs({ file }) {
+  if (!file) return process.stdout;
+
+  return createWriteStream(file);
+}
+
 async function runCommand(run, program) {
   try {
     const args = program.parse(process.argv)
 
     const { host, port } = getHostPortFromArgs(args);
 
-    await run(host, port, process.stdout, args);
+    const stream = getStreamFromArgs(args);
+
+    await run(host, port, stream, args);
   } catch (e) {
     if (e._liberror) {
       console.error(e.message);
