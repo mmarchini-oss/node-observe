@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.2.1](https://www.github.com/mmarchini-oss/node-observe/compare/v0.2.0...v0.2.1) (2020-07-22)
+
+
+### Bug Fixes
+
+* attempt to fix release-please -> pkg ([fe32f4e](https://www.github.com/mmarchini-oss/node-observe/commit/fe32f4e4b91b2baf17596d7db164237bdac8f054))
+
 ## [0.2.0](https://www.github.com/mmarchini-oss/node-observe/compare/v0.1.2...v0.2.0) (2020-07-22)
 
 
