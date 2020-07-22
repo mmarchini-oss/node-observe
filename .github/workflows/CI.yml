@@ -18,7 +18,8 @@ jobs:
           - version: 12.x
           - version: 14.x
         # TODO(mmarchini): fix tests on windows and re-enable it here
-        os: [ubuntu-latest, macos-latest]
+        # os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -62,7 +63,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-${{ matrix.version }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-v12.x-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Use Node.js v12
         uses: actions/setup-node@v2-beta
         with:
