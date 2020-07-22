@@ -7,6 +7,7 @@
     "test": "tape test/test-*.js",
     "coverage": "nyc tape test/test-*.js",
     "coverage-ci": "nyc --reporter=lcov tape test/test-*.js",
+    "pkg": "pkg --target host --output dist/observe package.json",
     "linter": "eslint lib bin test"
   },
   "bin": "./bin/observe.js",
@@ -26,7 +27,11 @@
   "devDependencies": {
     "eslint": "^6.8.0",
     "nyc": "^15.0.1",
+    "pkg": "^4.4.9",
     "tape": "^4.13.2"
+  },
+  "pkg": {
+    "assets": [ "bin/*.js", "lib/**/*.js" ]
   },
   "dependencies": {
     "commander": "^5.0.0",
