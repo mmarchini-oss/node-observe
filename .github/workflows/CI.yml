@@ -16,19 +16,15 @@ jobs:
         node:
           - version: 10.x
           - version: 12.x
-          - version: 13.x
           - version: 14.x
-            mirror: https://nodejs.org/download/nightly
-          - version: 14.x
-            mirror: https://nodejs.org/download/v8-canary
         # TODO(mmarchini): fix tests on windows and re-enable it here
         os: [ubuntu-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node.version }} ${{ matrix.node.mirror }}
-        uses: mmarchini/setup-node@mirror
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node.version }}
           node-mirror: ${{ matrix.node.mirror }}
@@ -43,9 +39,9 @@ jobs:
   linter:
     runs-on: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Use Node.js LTS
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: 12.x
       - name: npm install, build, and test
