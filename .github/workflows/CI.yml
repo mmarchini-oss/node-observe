@@ -7,6 +7,8 @@ on:
   pull_request:
   schedule:
     - cron:  '0 0 * * *'
+  release:
+    - published
 
 jobs:
   tests:
@@ -52,3 +54,47 @@ jobs:
         run: |
           npm install
           npm run linter
+
+  pkg-tests:
+    needs: [linter, tests]
+    strategy:
+      fail-fast: false
+      matrix:
+        # TODO(mmarchini): fix tests on windows and re-enable it here
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js v12
+        uses: mmarchini/setup-node@mirror
+        with:
+          node-version: v12
+      - name: npm install
+        run: |
+          npm install
+      - name: create packages
+        run: |
+          npm run pkg
+      - name: run tests
+        run: OBSERVE_EXECUTABLE=./dist/observe npm test
+
+      - name: compress
+        run: gzip -c dist/observe > dist/observe-${{runner.os}}.gz
+
+      - name: upload action artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: observe-${{runner.os}}
+          path: dist/observe-${{runner.os}}.gz
+
+      - name: upload release artifact
+        uses: actions/upload-release-asset@v1
+        if: github.event_name == 'release'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/observe-${{runner.os}}.gz
+          asset_name: observe-${{runner.os}}.gz
+          asset_content_type: application/gzip

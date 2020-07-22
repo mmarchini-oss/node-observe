@@ -1,12 +1,28 @@
 'use strict'
 
 const EventEmitter = require('events');
-const { fork } = require('child_process');
+const { fork, spawn } = require('child_process');
 const { tmpdir } = require('os');
+const { join } = require('path');
 const { readFile, unlink } = require('fs');
 const { promisify } = require('util');
 const path = require('path');
 const net = require('net');
+
+const { OBSERVE_EXECUTABLE, OBSERVE_ARGS } = (() => {
+  if (process.env.OBSERVE_EXECUTABLE)
+    return {
+      OBSERVE_EXECUTABLE: process.env.OBSERVE_EXECUTABLE,
+      OBSERVE_ARGS: []
+    };
+  else {
+    return {
+      OBSERVE_EXECUTABLE: process.execPath,
+      OBSERVE_ARGS: [join(__dirname, '..', 'bin', 'observe.js')]
+    }
+  }
+})()
+
 
 async function getPort(nextPort = 45032) {
   let resolve, reject;
@@ -60,7 +76,8 @@ function cleanupTemporaryFile(file) {
 }
 
 async function runObserveExecutable(command, { port, pid, toFile, options }) {
-  let args = [command]
+  let args = [...OBSERVE_ARGS, command]
+  console.log(args);
   if (pid)
     args = args.concat(['-p', pid]);
   if (port)
@@ -72,7 +89,7 @@ async function runObserveExecutable(command, { port, pid, toFile, options }) {
     file = getTemporaryFile();
     args = args.concat(['-f', file]);
   }
-  const child = fork('./bin/observe.js', args, { encoding: 'utf8', stdio: 'pipe' });
+  const child = spawn(OBSERVE_EXECUTABLE, args, { encoding: 'utf8', stdio: 'pipe' });
   let output = "";
   child.stdout.on('data', (chunk) => output = output + chunk);
   return new Promise((resolve, reject) => {
