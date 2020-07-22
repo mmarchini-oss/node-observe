@@ -77,7 +77,6 @@ function cleanupTemporaryFile(file) {
 
 async function runObserveExecutable(command, { port, pid, toFile, options }) {
   let args = [...OBSERVE_ARGS, command]
-  console.log(args);
   if (pid)
     args = args.concat(['-p', pid]);
   if (port)
@@ -90,21 +89,24 @@ async function runObserveExecutable(command, { port, pid, toFile, options }) {
     args = args.concat(['-f', file]);
   }
   const child = spawn(OBSERVE_EXECUTABLE, args, { encoding: 'utf8', stdio: 'pipe' });
-  let output = "";
-  child.stdout.on('data', (chunk) => output = output + chunk);
+  let stdout = ""
+  let stderr = "";
+  child.stdout.on('data', (chunk) => stdout = stdout + chunk);
+  child.stderr.on('data', (chunk) => stderr = stderr + chunk);
   return new Promise((resolve, reject) => {
     child.on('exit', async (code, signal) => {
       if (code !== 0 || signal) {
+        console.error({ stdout, stderr });
         return reject(new Error(`Process exited with code ${code || signal}`));
       }
       if (toFile) {
-        output = await promisify(readFile)(file);
+        stdout = await promisify(readFile)(file);
         cleanupTemporaryFile(file);
       }
-      if (!output) {
-        return reject(new Error(`Empty output`));
+      if (!stdout) {
+        return reject(new Error(`Empty stdout`));
       }
-      return resolve(JSON.parse(output));
+      return resolve(JSON.parse(stdout));
     });
   });
 }
