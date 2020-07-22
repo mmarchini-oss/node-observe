@@ -23,11 +23,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ matrix.version }}-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Use Node.js ${{ matrix.node.version }} ${{ matrix.node.mirror }}
         uses: actions/setup-node@v2-beta
         with:
           node-version: ${{ matrix.node.version }}
-          node-mirror: ${{ matrix.node.mirror }}
       - name: npm install
         run: |
           npm install
@@ -54,6 +58,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-${{ matrix.version }}-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Use Node.js v12
         uses: actions/setup-node@v2-beta
         with:
@@ -66,10 +75,8 @@ jobs:
           npm run pkg
       - name: run tests
         run: OBSERVE_EXECUTABLE=./dist/observe npm test
-
       - name: compress
         run: cd dist && tar czf observe-${{runner.os}}.tar.gz observe
-
       - name: upload action artifact
         uses: actions/upload-artifact@v2
         with:
@@ -87,13 +94,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
           package-name: "@mmarchini/observe"
-
       - uses: actions/download-artifact@v2
         id: download
         if: ${{ steps.release.outputs.release_created }}
         with:
           name: observe-${{runner.os}}.tar.gz
-
       - name: upload OS X release artifact
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/upload-release-asset@v1
