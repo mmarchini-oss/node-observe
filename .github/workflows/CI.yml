@@ -7,8 +7,6 @@ on:
   pull_request:
   schedule:
     - cron:  '0 0 * * *'
-  release:
-    types: [published]
 
 jobs:
   tests:
@@ -53,17 +51,11 @@ jobs:
 
   pkg-tests:
     needs: [linter, tests]
-    strategy:
-      fail-fast: false
-      matrix:
-        # TODO(mmarchini): fix tests on windows and re-enable it here
-        os: [ubuntu-latest, macos-latest]
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Use Node.js v12
-        uses: mmarchini/setup-node@mirror
+        uses: actions/setup-node@v2-beta
         with:
           node-version: v12
       - name: npm install
@@ -84,13 +76,31 @@ jobs:
           name: observe-${{runner.os}}.tar.gz
           path: dist/observe-${{runner.os}}.tar.gz
 
-      - name: upload release artifact
+  release-please:
+    runs-on: ubuntu-latest
+    needs: [pkg-tests]
+    if: github.event_name == 'push'
+    steps:
+      - uses: mmarchini/release-please-action@set-more-output
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: node
+          package-name: "@mmarchini/observe"
+
+      - uses: actions/download-artifact@v2
+        id: download
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          name: observe-${{runner.os}}.tar.gz
+
+      - name: upload OS X release artifact
+        if: ${{ steps.release.outputs.release_created }}
         uses: actions/upload-release-asset@v1
-        if: github.event_name == 'release'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./dist/observe-${{runner.os}}.tar.gz
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: ${{steps.download.outputs.download-path}}/observe-${{runner.os}}.tar.gz
           asset_name: observe-${{runner.os}}.tar.gz
           asset_content_type: application/gzip
