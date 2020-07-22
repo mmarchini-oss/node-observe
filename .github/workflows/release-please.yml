@@ -12,4 +12,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
-          package-name: @mmarchini/observe
+          package-name: "@mmarchini/observe"
