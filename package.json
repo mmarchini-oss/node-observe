@@ -1,6 +1,6 @@
 {
   "name": "@mmarchini/observe",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Inspector Protocol made easy",
   "main": "index.js",
   "scripts": {
