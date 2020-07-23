@@ -2,7 +2,12 @@
 
 const test = require('tape');
 
-const { startFixtureProcess, runObserveExecutable, getPort } = require('./common');
+const {
+  startFixtureProcess,
+  runObserveExecutable,
+  getPort,
+  validateCpuProfile
+} = require('./common');
 
 test('observe heap-profile', async (t) => {
   const port = await getPort();
@@ -59,6 +64,30 @@ test('observe heap-snapshot to file', async (t) => {
     t.notEqual(nodes, undefined);
     t.notEqual(edges, undefined);
     t.notEqual(strings, undefined);
+    f.send('exit');
+    t.end();
+  });
+});
+
+test('observe cpu-profile', async (t) => {
+  const port = await getPort();
+  const f = startFixtureProcess(t, false, port);
+  f.on('ready', async () => {
+    const options = { pid: f.pid, port, options: ['-d', 1]};
+    const result = await runObserveExecutable('cpu-profile', options);
+    t.ok(validateCpuProfile(result));
+    f.send('exit');
+    t.end();
+  });
+});
+
+test('observe cpu-profile to file', async (t) => {
+  const port = await getPort();
+  const f = startFixtureProcess(t, false, port);
+  f.on('ready', async () => {
+    const options = { pid: f.pid, port, toFile: true, options: ['-d', 1]};
+    const result = await runObserveExecutable('cpu-profile', options);
+    t.ok(validateCpuProfile(result));
     f.send('exit');
     t.end();
   });
