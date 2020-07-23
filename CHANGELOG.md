@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://www.github.com/mmarchini-oss/node-observe/compare/v0.2.1...v1.0.0) (2020-07-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* first stable release
+
+### Features
+
+* first stable release ([183c9cb](https://www.github.com/mmarchini-oss/node-observe/commit/183c9cb719ca750993f91b4a28a7eff230c6c73b))
+
 ### [0.2.1](https://www.github.com/mmarchini-oss/node-observe/compare/v0.2.0...v0.2.1) (2020-07-22)
 
 
