@@ -142,4 +142,16 @@ class FixtureProcess extends EventEmitter {
   }
 }
 
-module.exports = { startFixtureProcess, FixtureProcess, runObserveExecutable, getPort }
+function validateCpuProfile({ nodes, startTime, endTime, samples, timeDeltas }) {
+    return Array.isArray(nodes) && Number.isInteger(startTime) &&
+           Number.isInteger(endTime) && Array.isArray(samples) &&
+           Array.isArray(timeDeltas);
+}
+
+module.exports = {
+  startFixtureProcess,
+  FixtureProcess,
+  runObserveExecutable,
+  getPort,
+  validateCpuProfile
+}
