@@ -44,6 +44,7 @@ Available commands are:
 
   * `heap-profile` will take a Heap Profile
   * `heap-snapshot` will take a Heap Snapshot
+  * `cpu-profile` will take a CPU Snapshot
 
 By default the result will be outputted to stdout, so it can be piped to
 another process if needed without touching the filesystem (encryption, upload
