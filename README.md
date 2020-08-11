@@ -51,11 +51,14 @@ another process if needed without touching the filesystem (encryption, upload
 to another server, compression, etc.). `--file` will save the result to the
 filesystem instead.
 
-All commands require at least one option: `-p <pid>` or 
-`-h <host>`/`-P <port>`. `-p` will start the inspector protocol on the remote
-process `<pid>` by sending a `SIGUSR2` signal to the process.
+All commands require at least one option: `-p <pid>` or `-h <host>`/`-P <port>`.
+
+- `-p`: will start the inspector protocol on the remote process `<pid>` by sending a `SIGUSR2` signal to the process.
+- `-h/-P`: will attach to the inspector protocol on this remote or local host.
+Important, the app should already start debugger listening on the expected port.
+
 
 Each command might also have their own options. For example, `heap-profile`
-accepts a `-d <duration>` option to determine for how long the profiler should
+accepts a `-d <duration>` option to determine for how long(in seconds) the profiler should
 run. `npx -q @mmarchini/observe command -h` will show all available options for
 the command.
