@@ -53,7 +53,7 @@ filesystem instead.
 
 All commands require at least one option: `-p <pid>` or `-h <host>`/`-P <port>`.
 
-- `-p`: will start the inspector protocol on the remote process `<pid>` by sending a `SIGUSR2` signal to the process.
+- `-p`: will start the inspector protocol on the remote process `<pid>` by sending a `SIGUSR1` signal to the process.
 - `-h/-P`: will attach to the inspector protocol on this remote or local host.
 Important, the app should already start debugger listening on the expected port.
 
