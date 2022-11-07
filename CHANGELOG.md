@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.0.1](https://www.github.com/mmarchini-oss/node-observe/compare/v1.0.0...v1.0.1) (2022-11-07)
+
+
+### Bug Fixes
+
+* **client:** catch unhandledException ([f683b19](https://www.github.com/mmarchini-oss/node-observe/commit/f683b1989d54216f76261644bfa70e436ab5062a))
+* **profiles:** fix encoding of profiles on Node.js v16+ ([ab0f580](https://www.github.com/mmarchini-oss/node-observe/commit/ab0f58006c586faff9d5d811572a769b23131557))
+
 ## [1.0.0](https://www.github.com/mmarchini-oss/node-observe/compare/v0.2.1...v1.0.0) (2020-07-23)
 
 
