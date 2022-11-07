@@ -17,6 +17,9 @@ jobs:
           - version: 10.x
           - version: 12.x
           - version: 14.x
+          - version: 16.x
+          - version: 18.x
+          - version: 19.x
         # TODO(mmarchini): fix tests on windows and re-enable it here
         os: [ubuntu-latest, macos-latest]
 
