@@ -36,11 +36,11 @@ jobs:
       - name: npm install
         run: |
           npm install
-      - name: run tests
-        run: npm run coverage-ci
-      - uses: codecov/codecov-action@v1
-        with:
-          fail_ci_if_error: true
+      # - name: run tests
+      #   run: npm run coverage-ci
+      # - uses: codecov/codecov-action@v1
+      #   with:
+      #     fail_ci_if_error: true
   linter:
     runs-on: [ubuntu-latest]
     steps:
