@@ -6,7 +6,8 @@ const {
   startFixtureProcess,
   runObserveExecutable,
   getPort,
-  validateCpuProfile
+  validateCpuProfile,
+  isPortInUse
 } = require('./common');
 
 test('observe heap-profile', async (t) => {
@@ -90,5 +91,20 @@ test('observe cpu-profile to file', async (t) => {
     t.ok(validateCpuProfile(result));
     f.send('exit');
     t.end();
+  });
+});
+
+test('observe --close', async (t) => {
+  const port = await getPort();
+  const f = startFixtureProcess(t, false, port);
+  f.on('ready', async () => {
+    const options = { pid: f.pid, port, options: ['-d', 1, '--close']};
+    const result = await runObserveExecutable('cpu-profile', options);
+    setTimeout(async () => {
+      t.notOk(await isPortInUse(port));
+      t.ok(validateCpuProfile(result));
+      f.send('exit');
+      t.end();
+    }, 500);
   });
 });

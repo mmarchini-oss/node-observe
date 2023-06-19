@@ -9,6 +9,8 @@ const { promisify } = require('util');
 const path = require('path');
 const net = require('net');
 
+const Client = require('../lib/internal/inspector-client');
+
 const { OBSERVE_EXECUTABLE, OBSERVE_ARGS } = (() => {
   if (process.env.OBSERVE_EXECUTABLE)
     return {
@@ -23,27 +25,37 @@ const { OBSERVE_EXECUTABLE, OBSERVE_ARGS } = (() => {
   }
 })()
 
-
-async function getPort(nextPort = 45032) {
+async function isPortInUse(port) {
   let resolve, reject;
   const promise = new Promise((a, b) => { resolve = a; reject = b });
+
   const server = net.createServer();
-  server.listen(nextPort, function (err) {
+  server.on('error', async function (err) {
+    if (err.code === 'EADDRINUSE') {
+      return resolve(true)
+    }
+    return reject(err);
+  });
+  server.listen(port, '127.0.0.1', function (err) {
     if (err) {
       return reject(err);
     }
     server.once('close', function () {
-      resolve(nextPort)
+      resolve(false)
     })
     server.close()
   });
-  server.on('error', async function (err) {
-    if (err.code === 'EADDRINUSE') {
-      return resolve(await getPort(nextPort + 1))
-    }
-    return reject(err);
-  });
+
   return promise;
+}
+
+
+async function getPort(nextPort = 45032) {
+  if (await isPortInUse(nextPort)) {
+    return getPort(nextPort++);
+  } else {
+    return nextPort;
+  }
 }
 
 function startFixtureProcess(t, withInspector = false, port = '0') {
@@ -148,10 +160,35 @@ function validateCpuProfile({ nodes, startTime, endTime, samples, timeDeltas }) 
            Array.isArray(timeDeltas);
 }
 
+class FakeStream {
+  constructor() {
+    this.data = '';
+  }
+
+  write(chunk) {
+    this.data += chunk;
+  }
+}
+
+async function runCommandWithClient(run, port, ...args) {
+  const stream = new FakeStream();
+
+  const client = new Client('localhost', port);
+  await client.connect();
+
+  await run(client, stream, ...args);
+
+  client.disconnect();
+
+  return stream;
+}
+
 module.exports = {
   startFixtureProcess,
   FixtureProcess,
   runObserveExecutable,
   getPort,
-  validateCpuProfile
+  validateCpuProfile,
+  runCommandWithClient,
+  isPortInUse
 }
