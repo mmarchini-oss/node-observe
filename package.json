@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "tape test/test-*.js",
-    "coverage": "nyc tape test/test-*.js",
+    "coverage": "nyc --reporter=html tape test/test-*.js",
     "coverage-ci": "nyc --reporter=lcov tape test/test-*.js",
     "pkg": "pkg --target host --output dist/observe package.json",
     "linter": "eslint lib bin test"
