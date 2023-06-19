@@ -33,14 +33,13 @@ jobs:
         uses: actions/setup-node@v2-beta
         with:
           node-version: ${{ matrix.node.version }}
-      - name: npm install
+      - name: npm install and test
         run: |
           npm install
-      # - name: run tests
-      #   run: npm run coverage-ci
-      # - uses: codecov/codecov-action@v1
-      #   with:
-      #     fail_ci_if_error: true
+          npm run coverage-ci
+      - uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: true
   linter:
     runs-on: [ubuntu-latest]
     steps:
@@ -49,44 +48,14 @@ jobs:
         uses: actions/setup-node@v2-beta
         with:
           node-version: 12.x
-      - name: npm install, build, and test
+      - name: npm install and lint
         run: |
           npm install
           npm run linter
 
-  pkg-tests:
-    needs: [linter, tests]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-v12.x-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: Use Node.js v12
-        uses: actions/setup-node@v2-beta
-        with:
-          node-version: v12
-      - name: npm install
-        run: |
-          npm install
-      - name: create packages
-        run: |
-          npm run pkg
-      - name: run tests
-        run: OBSERVE_EXECUTABLE=./dist/observe npm test
-      - name: compress
-        run: cd dist && tar czf observe-${{runner.os}}.tar.gz observe
-      - name: upload action artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: observe-${{runner.os}}.tar.gz
-          path: dist/observe-${{runner.os}}.tar.gz
-
   release-please:
     runs-on: ubuntu-latest
-    needs: [pkg-tests]
+    needs: [linter, tests]
     if: github.event_name == 'push'
     steps:
       - uses: mmarchini/release-please-action@set-more-output
@@ -95,18 +64,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
           package-name: "@mmarchini/observe"
-      - uses: actions/download-artifact@v2
-        id: download
-        if: ${{ steps.release.outputs.release_created }}
-        with:
-          name: observe-${{runner.os}}.tar.gz
-      - name: upload OS X release artifact
-        if: ${{ steps.release.outputs.release_created }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.release.outputs.upload_url }}
-          asset_path: ${{steps.download.outputs.download-path}}/observe-${{runner.os}}.tar.gz
-          asset_name: observe-${{runner.os}}.tar.gz
-          asset_content_type: application/gzip
