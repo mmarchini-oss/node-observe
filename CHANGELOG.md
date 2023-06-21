@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://www.github.com/mmarchini-oss/node-observe/compare/v1.0.1...v1.1.0) (2023-06-21)
+
+
+### Features
+
+* add --close flag ([51f44d4](https://www.github.com/mmarchini-oss/node-observe/commit/51f44d4c203dbf588463613a7627c64b984b1252))
+
 ### [1.0.1](https://www.github.com/mmarchini-oss/node-observe/compare/v1.0.0...v1.0.1) (2022-11-07)
 
 
