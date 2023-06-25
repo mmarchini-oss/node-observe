@@ -173,7 +173,7 @@ class FakeStream {
 async function runCommandWithClient(run, port, ...args) {
   const stream = new FakeStream();
 
-  const client = new Client('localhost', port);
+  const client = new Client('127.0.0.1', port);
   await client.connect();
 
   await run(client, stream, ...args);

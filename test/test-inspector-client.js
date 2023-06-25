@@ -10,7 +10,7 @@ test('attach to existing process', (t) => {
   f.on('inspectorReady', async ({ port }) => {
     t.ok(port > 0);
 
-    const client = new Client('localhost', port);
+    const client = new Client('127.0.0.1', port);
     try {
       await client.connect();
       await client.disconnect();
@@ -27,7 +27,7 @@ test('send message', (t) => {
   f.on('inspectorReady', async ({ port }) => {
     t.ok(port > 0);
 
-    const client = new Client('localhost', port);
+    const client = new Client('127.0.0.1', port);
     try {
       await client.connect();
       t.deepEqual(await client.post('Profiler.enable'), {});
@@ -46,7 +46,7 @@ test('receive message', (t) => {
   f.on('inspectorReady', async ({ port }) => {
     t.ok(port > 0);
 
-    const client = new Client('localhost', port);
+    const client = new Client('127.0.0.1', port);
     try {
       await client.connect();
       await client.post('Debugger.enable', {});

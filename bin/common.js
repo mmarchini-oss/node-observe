@@ -24,7 +24,7 @@ function getHostPortFromArgs({ pid, host, port }) {
     startDebugger(pid);
   }
 
-  return { host: host || 'localhost', port: port || 9229 };
+  return { host: host || '127.0.0.1', port: port || 9229 };
 }
 
 function getStreamFromArgs({ file }) {
