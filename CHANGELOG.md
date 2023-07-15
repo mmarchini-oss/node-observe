@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0](https://github.com/mmarchini-oss/node-observe/compare/v1.1.0...v2.0.0) (2023-07-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* change default --host to 127.0.0.1
+
+### Features
+
+* change default --host to 127.0.0.1 ([1b94e27](https://github.com/mmarchini-oss/node-observe/commit/1b94e2794ac5082235b12f00fe6657f34fa105b9))
+* check if inspector port is open before connecting ([b0d3417](https://github.com/mmarchini-oss/node-observe/commit/b0d341748642fdc5ba72a9d16be8842088a4cec2))
+
 ## [1.1.0](https://github.com/mmarchini-oss/node-observe/compare/v1.0.1...v1.1.0) (2023-06-21)
 
 
