@@ -21,7 +21,6 @@ test('take cpu profile', (t) => {
     t.notEqual(stream.data.length, 0);
     const result = JSON.parse(stream.data);
     t.ok(validateCpuProfile(result));
-    f.send('exit');
     t.end();
   });
 });
@@ -37,7 +36,6 @@ test('take cpu profile with duration', (t) => {
     const result = JSON.parse(stream.data);
     t.ok(validateCpuProfile(result));
 
-    f.send('exit');
     t.end();
   });
 });
@@ -58,7 +56,6 @@ test('take cpu profile with samplingInterval', (t) => {
     // samples will be captured.
     t.ok(samples1.length * 3 < samples2.length);
 
-    f.send('exit');
     t.end();
   });
 });

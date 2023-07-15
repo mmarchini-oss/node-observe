@@ -19,7 +19,9 @@ function maybeSendInspectorReadyEvent() {
 }
 
 function openInspector() {
+  console.log('opening inspector');
   inspector.open();
+  console.log('inspector opened');
   maybeSendInspectorReadyEvent();
 }
 

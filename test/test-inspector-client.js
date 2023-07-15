@@ -14,7 +14,6 @@ test('attach to existing process', (t) => {
     try {
       await client.connect();
       await client.disconnect();
-      f.send('exit');
       t.end();
     } catch (e) {
       t.fail(e.toString())
@@ -33,7 +32,6 @@ test('send message', (t) => {
       t.deepEqual(await client.post('Profiler.enable'), {});
       t.deepEqual(await client.post('Profiler.disable', {}), {});
       await client.disconnect();
-      f.send('exit');
       t.end();
     } catch (e) {
       t.fail(e.toString())
@@ -56,7 +54,6 @@ test('receive message', (t) => {
       });
       client.on('Debugger.resumed', async () => {
         await client.disconnect();
-        f.send('exit');
         t.end();
       });
       t.deepEqual(await client.post('Debugger.pause', {}), {});

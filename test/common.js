@@ -64,8 +64,15 @@ function startFixtureProcess(t, withInspector = false, port = '0') {
     execArgv.push('--inspect');
   }
   const child = fork('./test/fixtures/default-program.js', { execArgv, silent: true});
+  let output = '';
+  child.stdout.setEncoding('utf-8');
+  child.stdout.on('data', (data) => output += `[${ child.pid }][stdout] ${ data }`);
+  child.stderr.setEncoding('utf-8');
+  child.stderr.on('data', (data) => output += `[${ child.pid }][stderr] ${ data }`);
   const fixture = new FixtureProcess(child);
   fixture.on('timeout', t.fail);
+  t.once('result', ({ ok }) => { if (!ok) { console.log(output) } });
+  t.teardown(() => { fixture.exit(); });
   return fixture;
 }
 
@@ -87,7 +94,7 @@ function cleanupTemporaryFile(file) {
   });
 }
 
-async function runObserveExecutable(command, { port, pid, toFile, options }) {
+async function runObserveExecutable(command, t, { port, pid, toFile, options }) {
   let args = [...OBSERVE_ARGS, command]
   if (pid)
     args = args.concat(['-p', pid]);
@@ -120,7 +127,7 @@ async function runObserveExecutable(command, { port, pid, toFile, options }) {
       }
       return resolve(JSON.parse(stdout));
     });
-  });
+  }).catch(t.fail);
 }
 
 class FixtureProcess extends EventEmitter {
@@ -128,6 +135,7 @@ class FixtureProcess extends EventEmitter {
     super();
     this._p = p;
     this.pid = p.pid;
+    this.exited = false;
     this._backlog = {};
     p.on('message', ({ event, payload }) => {
       payload = payload || {};
@@ -151,6 +159,16 @@ class FixtureProcess extends EventEmitter {
 
   send(event, payload = {}) {
     this._p.send({ event, payload });
+  }
+
+  exit() {
+    // I'm not sure this is the best way to handle this, but there is one test
+    // that needs to call exit(), but we want to have teardown() run it for
+    // every other test
+    if (!this.exited) {
+      this.exited = true;
+      this.send('exit');
+    }
   }
 }
 

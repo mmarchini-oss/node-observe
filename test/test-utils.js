@@ -13,14 +13,13 @@ test('attach to existing process', (t) => {
   }));
 
   f.on('inspectorReady', () => {
-    f.send('exit');
     t.end();
   });
 });
 
 test('attach to non-existing process', (t) => {
   const f = startFixtureProcess(t);
-  f.on('ready', () => f.send('exit'));
+  f.on('ready', () => f.exit());
 
   // TODO(mmarchini): There's probably a better way to do this.
   f._p.on('close', () => {

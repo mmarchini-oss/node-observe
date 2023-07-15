@@ -23,7 +23,6 @@ test('take heap profile', (t) => {
     t.notEqual(head, undefined);
     const { callFrame } = head;
     t.notEqual(callFrame, undefined);
-    f.send('exit');
     t.end();
   });
 });
@@ -41,7 +40,6 @@ test('take heap profile with duration', (t) => {
     const { callFrame } = head;
     t.notEqual(callFrame, undefined);
 
-    f.send('exit');
     t.end();
   });
 });
@@ -61,7 +59,6 @@ test('take heap profile with samplingInterval', (t) => {
     // is a grouped profile format.
     t.ok(stream1.data.length * 3 < stream2.data.length);
 
-    f.send('exit');
     t.end();
   });
 });

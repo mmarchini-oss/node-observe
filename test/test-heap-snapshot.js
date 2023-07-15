@@ -17,7 +17,6 @@ test('take heap snapshot', (t) => {
     t.notEqual(nodes, undefined);
     t.notEqual(edges, undefined);
     t.notEqual(strings, undefined);
-    f.send('exit');
     t.end();
   });
 });
