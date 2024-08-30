@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.0](https://github.com/mmarchini-oss/node-observe/compare/v2.0.0...v3.0.0) (2024-08-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop support for Node.js 10, 12, 14
+
+### Features
+
+* add experimental custom-script tool (undocumented) ([39208d4](https://github.com/mmarchini-oss/node-observe/commit/39208d49c29fff33c79af58679f00e155fbaffef))
+* drop support for Node.js 10, 12, 14 ([37680d0](https://github.com/mmarchini-oss/node-observe/commit/37680d0bd203642ebfbfeda8afe11370866be0c2))
+
 ## [2.0.0](https://github.com/mmarchini-oss/node-observe/compare/v1.1.0...v2.0.0) (2023-07-15)
 
 
