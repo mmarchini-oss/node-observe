@@ -13,7 +13,7 @@
   "bin": "./bin/observe.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com/mmarchini/node-observe"
+    "url": "git@github.com/mmarchini-oss/node-observe"
   },
   "keywords": [
     "inspector-protocol",
