@@ -25,11 +25,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-${{ matrix.version }}-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Use Node.js ${{ matrix.node.version }} ${{ matrix.node.mirror }}
         uses: actions/setup-node@v2-beta
         with:
