@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/mmarchini-oss/node-observe/compare/v3.0.0...v3.1.0) (2025-06-07)
+
+
+### Features
+
+* **custom-script:** allow passing arguments to custom scripts ([327e816](https://github.com/mmarchini-oss/node-observe/commit/327e81650a8ca958c9abcff20ac6fc0f122dce54))
+
 ## [3.0.0](https://github.com/mmarchini-oss/node-observe/compare/v2.0.0...v3.0.0) (2024-08-30)
 
 
